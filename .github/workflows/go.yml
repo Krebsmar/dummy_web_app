@@ -56,4 +56,4 @@ jobs:
         context: .
         file: ./dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/dummywebapp:${{ github.sha }}
+        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/dummywebapp:${{ github.sha }},${{ secrets.DOCKER_HUB_USERNAME }}/dummywebapp:latest
