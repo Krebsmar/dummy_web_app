@@ -27,7 +27,7 @@ jobs:
         file: ./dockerfile
         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/dummywebapp:${{ github.sha }}
 
-    - name: Run Trivy vulnerability scanner
+    - name: Run Trivy vulnerability scanner (Pipeline Output)
       uses: aquasecurity/trivy-action@master
       with:
         image-ref: '${{ secrets.DOCKER_HUB_USERNAME }}/dummywebapp:${{ github.sha }}'
@@ -37,7 +37,7 @@ jobs:
         vuln-type: 'os,library'
         severity: 'CRITICAL,HIGH'
         
-    - name: Run Trivy vulnerability scanner
+    - name: Run Trivy vulnerability scanner (Sarif Output)
       uses: aquasecurity/trivy-action@master
       with:
         image-ref:  '${{ secrets.DOCKER_HUB_USERNAME }}/dummywebapp:${{ github.sha }}'
@@ -45,7 +45,7 @@ jobs:
         output: 'trivy-results.sarif'
 
     - name: Upload Trivy scan results to GitHub Security tab
-      uses: github/codeql-action/upload-sarif@v1
+      uses: github/codeql-action/upload-sarif@v2
       if: always() 
       with:
         sarif_file: 'trivy-results.sarif'
