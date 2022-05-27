@@ -14,14 +14,18 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
         
+    - name: Login to DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+        
     - name: Build and push
       uses: docker/build-push-action@v3.0.0
       with:
         context: .
         file: ./dockerfile
         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/dummywebapp:${{ github.sha }}
-        username: ${{ secrets.DOCKER_HUB_USERNAME }}
-        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
@@ -45,13 +49,6 @@ jobs:
       if: always() 
       with:
         sarif_file: 'trivy-results.sarif'
-
-  push:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
       
     - name: Build and push
       uses: docker/build-push-action@v3.0.0
@@ -60,5 +57,3 @@ jobs:
         file: ./dockerfile
         push: true
         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/dummywebapp:${{ github.sha }}
-        username: ${{ secrets.DOCKER_HUB_USERNAME }}
-        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
